@@ -1,3 +1,5 @@
-## 1.0.0
+## 1.0.1
 
-- Initial release
+- Second release
+- Changed response to know whether the api call was success or not
+- Minor changes in error handling.

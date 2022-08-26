@@ -1,3 +1,4 @@
+
 package com.xuriti.datasdk;
 
 import android.Manifest;
@@ -56,6 +57,7 @@ public class DatasdkPlugin implements FlutterPlugin, MethodCallHandler, Activity
   private  String latitude;
   private String longitude;
   private String fcmtoken;
+  private Result finalResult;
 
   @Override
   public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
@@ -67,6 +69,7 @@ public class DatasdkPlugin implements FlutterPlugin, MethodCallHandler, Activity
 
   @Override
   public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
+    finalResult =result;
     if (call.method.equals("getPlatformVersion")) {
       result.success("Android " + android.os.Build.VERSION.RELEASE);
     } else if(call.method.equals("getAppData")){
@@ -90,8 +93,9 @@ public class DatasdkPlugin implements FlutterPlugin, MethodCallHandler, Activity
     }else {
       //getLocation();
       output =  getUserData();
+      //Log.d("RES",output);
     }
-    result.success("GG");
+    //result.success("GG");
     }
   }
   @Override
@@ -124,6 +128,7 @@ public class DatasdkPlugin implements FlutterPlugin, MethodCallHandler, Activity
     boolean b = grantResults[0] == PackageManager.PERMISSION_GRANTED;
     if(b){
       output = getUserData();
+      Log.d("RES",output);
       return true;
     }
 
@@ -198,7 +203,7 @@ public class DatasdkPlugin implements FlutterPlugin, MethodCallHandler, Activity
   private String apiCall(){
    // Log.d("METHOD","APICALLL");
 
-    final String[] result = {null};
+
     ArrayList<String> apps= getallapps();
     String URL = baseUrl+"/api/user/userdata";
     String time = String.valueOf(System.currentTimeMillis());    RequestQueue requestQueue = Volley.newRequestQueue(context);
@@ -224,6 +229,7 @@ public class DatasdkPlugin implements FlutterPlugin, MethodCallHandler, Activity
       e.printStackTrace();
     }
     try {
+      String result ;
       reqBody.put("userId",userid);
       reqBody.put("appList",apps);
       reqBody.put("smsData",sms_data);
@@ -232,24 +238,26 @@ public class DatasdkPlugin implements FlutterPlugin, MethodCallHandler, Activity
       JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, URL, reqBody, new Response.Listener<JSONObject>() {
         @Override
         public void onResponse(JSONObject response) {
-          //Log.d("API",response.toString());
-          result[0] ="SUCCESS";
+          Log.d("API",response.toString());
+          finalResult.success("SUCCESS");
         }
       }, new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError error) {
-          //Log.d("API",error.toString());
+          Log.d("API",error.toString());
 
-          result[0] = "SUCCESS";
+          finalResult.success("ERROR");
         }
       });
       requestQueue.add(jsonObjectRequest);
     } catch (JSONException e) {
+    Log.d("EXECP",e.toString());
       e.printStackTrace();
     }
 
-    return result[0];
+      return "HI";
+
+
   }
 
 }
-

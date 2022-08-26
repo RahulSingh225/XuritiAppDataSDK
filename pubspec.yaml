@@ -1,6 +1,6 @@
 name: datasdk
 description: App data collection plugin for xuriti.
-version: 1.0.0
+version: 1.0.1
 homepage: https://github.com/RahulSingh225/XuritiAppDataSDK.
 
 environment:

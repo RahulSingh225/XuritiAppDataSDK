@@ -28,19 +28,16 @@ class _MyAppState extends State<MyApp> {
 
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> initPlatformState() async {
-    String platformVersion;
+    //sString platformVersion;
     String appdata;
     // Platform messages may fail, so we use a try/catch PlatformException.
     // We also handle the message potentially returning null.
     try {
-      appdata = await _datasdkPlugin.getAppData("62e4dbea3c1f62beda9e21ed",
-              "https://dev.xuriti.app", "latitude", "longitude", "fcmtoken") ??
-          'Unknown app version';
-
-      platformVersion = await _datasdkPlugin.getPlatformVersion() ??
-          'Unknown platform version';
+      appdata = await _datasdkPlugin.getAppData(
+              'userid', "baseurl", "latitude", "longitude", "fcmtoken") ??
+          'Unknown response';
     } on PlatformException {
-      platformVersion = 'Failed to get platform version.';
+      appdata = 'Failed to initialize sdk';
     }
 
     // If the widget was removed from the tree while the asynchronous platform
@@ -49,7 +46,7 @@ class _MyAppState extends State<MyApp> {
     if (!mounted) return;
 
     setState(() {
-      _platformVersion = platformVersion;
+      _appdata = appdata;
     });
   }
 
@@ -61,7 +58,7 @@ class _MyAppState extends State<MyApp> {
           title: const Text('Plugin example app'),
         ),
         body: Center(
-          child: Text('Running on: $_platformVersion\n'),
+          child: Text('Running on: $_appdata\n'),
         ),
       ),
     );
